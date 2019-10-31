@@ -1,0 +1,49 @@
+on:
+  push:
+    branches:         # array of glob patterns matching against refs/heads. Optional; defaults to all
+    - master          # triggers on pushes that contain changes in master
+    - feature/*
+
+name: Create Deployment
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    # - uses: imjohnbo/request-action@feature/mediaType
+    #   id: create_check_run
+    #   with:
+    #     route: POST /repos/:owner/:repo/check-runs
+    #     mediaType: '{"previews": ["antiope"]}'
+    #     name: 'Test check run'
+    #     head_sha: ${{ github.sha }}
+    #     output: '{"title":"Test check run title","summary": "Another summary of the test check run", "images": [{"alt": "Test image", "image_url": "https://octodex.github.com/images/jetpacktocat.png"}]}'
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+    # - id: parse_create_check_run
+    #   uses: gr2m/get-json-paths-action@v1.x
+    #   with:
+    #     json: ${{ steps.create_check_run.outputs.data }}
+    #     id: "id"
+        
+    # - uses: imjohnbo/request-action@281fcaaf783c8f9d3959df122650758b9de250d9
+    #   id: update_check_run
+    #   with:
+    #     route: PATCH /repos/:owner/:repo/check-runs/:check_run_id
+    #     check_run_id: ${{ steps.parse_create_check_run.outputs.id }}
+    #     headers: '{"accept": "application/vnd.github.antiope-preview+json"}'
+    #     conclusion: 'success'
+    #     status: 'completed'
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - uses: octokit/request-action@v1.x
+      id: create_deployment
+      # https://developer.github.com/v3/repos/deployments/#create-a-deployment
+      with:
+        route: POST /repos/:owner/:repo/deployments
+        mediaType: '{"previews": ["ant-man"]}'
+        ref: 'master'
+        task: 'deploy'
+        required_contexts: '[]'
